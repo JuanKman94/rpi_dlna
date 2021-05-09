@@ -1,0 +1,16 @@
+#!/bin/sh
+
+ADD_ACTION="add"
+QUEUE_TIME=1
+
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] [$1] Restarting minidlna..." >> /var/log/udev.log
+
+# trigger systemd's automount
+if [ "$1" = "$ADD_ACTION" ]; then
+	# force systemd's automount
+	sh -c "echo '/usr/bin/ls /srv/media/autousb > /dev/null' | /usr/bin/at -q m now + ${QUEUE_TIME} minute" &
+	QUEUE_TIME=2
+fi
+
+# rescan minidlna DB & restart service in $QUEUE_TIME minutes
+sh -c "echo 'minidlnad -r ; systemctl restart minidlna' | /usr/bin/at -q m now + ${QUEUE_TIME} minute" &

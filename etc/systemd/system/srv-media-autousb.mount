@@ -1,0 +1,11 @@
+[Unit]
+Description=Automount USB with media content
+
+[Mount]
+What=/dev/disk/by-label/MEDIA
+Where=/srv/media/autousb
+Type=auto
+Options=ro,x-systemd.automount
+
+[Install]
+WantedBy=multi-user.target

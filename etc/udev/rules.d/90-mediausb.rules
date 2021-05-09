@@ -1,0 +1,16 @@
+KERNEL!="sd[a-z][0-9]", GOTO="invalid_media_label"
+
+# Import FS infos
+IMPORT{program}="/sbin/blkid -o udev -p %N"
+
+# Get a label if present, otherwise specify one
+ENV{ID_FS_LABEL}!="MEDIA", GOTO="invalid_media_label"
+
+# Mount the device
+ACTION=="add", RUN+="/usr/bin/minidlna.restart add"
+
+# Clean up after removal
+ACTION=="remove", RUN+="/usr/bin/minidlna.restart remove"
+
+# Exit
+LABEL="invalid_media_label"
